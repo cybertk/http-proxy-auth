@@ -1,32 +1,27 @@
-// Authentication module.
-var http = require('http');
 var connect = require('connect');
 var httpProxy = require('http-proxy');
-var auth = require('../');
+var proxyAuth = require('../');
 
 var app = connect();
 var proxy = httpProxy.createServer();
 
 proxy.on('proxyReq', function(proxyReq, req, res, options) {
-    console.log('current user: ' + req.user);
+    console.log('current user: ' + JSON.stringify(req.user));
 });
 
-app.use(auth.basic(
+app.use(proxyAuth.basic(
     { realm: "test" }, function (username, password, callback) {
         console.log("username: " + username);
         console.log("password: " + password);
 
-        if (username === 'alice') callback('alice');
+        if (username === 'alice') callback({id: 'foo'});
         else callback();
     })
 );
 
-
 app.use(function (req, res) {
-
-    // You can define here your custom logic to handle the request
-    // and then proxy the request.
+    // Stand alone HTTP Proxy
     proxy.web(req, res, { target: { host: req.headers.host, port: req.headers.port }});
 });
 
-http.createServer(app).listen(1337);
+app.listen(9090);
