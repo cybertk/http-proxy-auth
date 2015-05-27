@@ -1,7 +1,7 @@
 {
   "name": "http-proxy-auth",
   "version": "0.0.1",
-  "description": "",
+  "description": "Connect/Express middleware for proxy authentication",
   "main": "index.js",
   "directories": {
     "test": "test"
